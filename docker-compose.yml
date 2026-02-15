@@ -1,0 +1,18 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: bitly-mysql
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: bitly
+        MYSQL_USER: user
+        MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+  redis:
+    image: redis:7.2
+    container_name: bitly-redis
+    restart: always
+    ports:
+      - "6379:6379"
