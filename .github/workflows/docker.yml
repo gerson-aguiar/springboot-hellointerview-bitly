@@ -45,7 +45,7 @@ jobs:
         id: task-def
         run: |
           aws ecs describe-task-definition \
-            --task-definition task-definition-springboot-bitly-latest \
+            --task-definition task-definition-springboot-bitly \
             --query taskDefinition > task-def.json
 
       - name: Update image in task definition
