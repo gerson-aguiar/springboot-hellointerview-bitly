@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface IShortUrlController {
 
     @GetMapping
-    ResponseEntity<Optional<ShortUrl>> get(String code);
+    ResponseEntity<ShortUrlResponseDTO> get(String code);
 
     @PostMapping
     ResponseEntity<String> createShortUrl(String shortUrl);
