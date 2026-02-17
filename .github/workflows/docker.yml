@@ -40,3 +40,32 @@ jobs:
           IMAGE_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}
           docker build -t $IMAGE_URI:${{ github.sha }} .
           docker push $IMAGE_URI:${{ github.sha }}
+
+      - name: Render new task definition
+        id: task-def
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition bitly-task \
+            --query taskDefinition > task-def.json
+
+      - name: Update image in task definition
+        run: |
+          IMAGE_URI=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:${{ github.sha }}
+
+          cat task-def.json | jq \
+            --arg IMAGE "$IMAGE_URI" \
+            '.containerDefinitions[0].image = $IMAGE |
+             del(.taskDefinitionArn,.revision,.status,.requiresAttributes,.compatibilities,.registeredAt,.registeredBy)' \
+            > new-task-def.json
+
+      - name: Register new task definition
+        run: |
+          aws ecs register-task-definition \
+            --cli-input-json file://new-task-def.json
+
+      - name: Deploy new revision
+        run: |
+          aws ecs update-service \
+            --cluster cluster-ecs-springboot-bitly \
+            --service task-definition-springboot-bitly-service-1hle4odr \
+            --force-new-deployment
