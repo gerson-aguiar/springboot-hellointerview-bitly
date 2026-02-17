@@ -73,5 +73,5 @@ jobs:
         run: |
           aws ecs update-service \
             --cluster cluster-ecs-springboot-bitly \
-            --service task-definition-springboot-bitly-service-1hle4odr \
+            --service task-definition-springboot-bitly-service-alb \
             --task-definition $TASK_DEF_ARN
