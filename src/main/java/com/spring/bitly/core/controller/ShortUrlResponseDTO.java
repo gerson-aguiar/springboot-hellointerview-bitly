@@ -11,7 +11,7 @@ public record ShortUrlResponseDTO(
         return new ShortUrlResponseDTO(
                 entity.getOriginalUrl(),
                 entity.getCode(),
-                "v0.0.2"
+                "v0.0.3"
         );
     }
 }
